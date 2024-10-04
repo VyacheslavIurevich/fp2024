@@ -98,21 +98,30 @@ type address20 =
   | Label of label (** Label to Jump to *)
 [@@deriving eq, show { with_path = false }]
 
+(** Instruction: RV32I, RV64I, RV32M, RV64M, RV32F *)
 type instruction =
   | Add of int_register * int_register * int_register (** Addition. rd = rs1 + rs2 *)
   | Sub of int_register * int_register * int_register (** Subtraction. rd = rs1 - rs2 *)
   | Xor of int_register * int_register * int_register (** Exclusive OR. rd = rs1 ^ rs2 *)
   | Or of int_register * int_register * int_register (** OR. rd = rs1 | rs2 *)
   | And of int_register * int_register * int_register (** AND. rd = rs1 & rs2 *)
-  | Sll of int_register * int_register * int_register (** Shift Left Logical. rd = rs1 << rs2 *)
-  | Srl of int_register * int_register * int_register (** Shift Right Logical. rd = rs1 >> rs2 *)
-  | Sra of int_register * int_register * int_register (** Shift Right Arithmetic. rd = rs1 >> rs2 *)
-  | Slt of int_register * int_register * int_register (** Set Less Than. rd = (rs1 < rs2) ? 1 : 0 *)
+  | Sll of int_register * int_register * int_register
+  (** Shift Left Logical. rd = rs1 << rs2 *)
+  | Srl of int_register * int_register * int_register
+  (** Shift Right Logical. rd = rs1 >> rs2 *)
+  | Sra of int_register * int_register * int_register
+  (** Shift Right Arithmetic. rd = rs1 >> rs2 *)
+  | Slt of int_register * int_register * int_register
+  (** Set Less Than. rd = (rs1 < rs2) ? 1 : 0 *)
   | Sltu of int_register * int_register * int_register (** Set Less Than (Unsigned) *)
-  | Addi of int_register * int_register * immediate12 (** Addition of Immediate. rd = rs1 + imm *)
-  | Xori of int_register * int_register * immediate12 (** XOR with Immediate. rd = rs1 ^ imm *)
-  | Ori of int_register * int_register * immediate12 (** OR with Immediate. rd = rs1 | imm *)
-  | Andi of int_register * int_register * immediate12 (** AND with Immediate. rd = rs1 & imm *)
+  | Addi of int_register * int_register * immediate12
+  (** Addition of Immediate. rd = rs1 + imm *)
+  | Xori of int_register * int_register * immediate12
+  (** XOR with Immediate. rd = rs1 ^ imm *)
+  | Ori of int_register * int_register * immediate12
+  (** OR with Immediate. rd = rs1 | imm *)
+  | Andi of int_register * int_register * immediate12
+  (** AND with Immediate. rd = rs1 & imm *)
   | Slli of int_register * int_register * immediate12
   (** Shift Left Logical with Immediate. rd = rs1 << shamt[0:4] *)
   | Srli of int_register * int_register * immediate12
@@ -122,9 +131,12 @@ type instruction =
   | Slti of int_register * int_register * immediate12
   (** Set Less Than Imm. rd = (rs1 < imm) ? 1 : 0 *)
   | Sltiu of int_register * int_register * immediate12 (** Set Less Than Imm (Unsigned) *)
-  | Lb of int_register * int_register * immediate12 (** Load Byte. rd = M[rs1 + imm][0:7] *)
-  | Lh of int_register * int_register * immediate12 (** Load Half. rd = M[rs1 + imm][0:15] *)
-  | Lw of int_register * int_register * immediate12 (** Load Word. rd = M[rs1 + imm][0:31] *)
+  | Lb of int_register * int_register * immediate12
+  (** Load Byte. rd = M[rs1 + imm][0:7] *)
+  | Lh of int_register * int_register * immediate12
+  (** Load Half. rd = M[rs1 + imm][0:15] *)
+  | Lw of int_register * int_register * immediate12
+  (** Load Word. rd = M[rs1 + imm][0:31] *)
   | Lbu of int_register * int_register * immediate12 (** Load Byte Unsigned *)
   | Lhu of int_register * int_register * immediate12 (** Load Half Unsigned *)
   | Sb of int_register * immediate12 * int_register
@@ -135,9 +147,12 @@ type instruction =
   (** Store Word. M[rs1 + imm][0:31] = rs2[0:31] *)
   | Beq of int_register * int_register * address12
   (** Branch ==. if (rs1 == rs2) PC += imm. PC is a program counter *)
-  | Bne of int_register * int_register * address12 (** Branch !=. if (rs1 != rs2) PC += imm. *)
-  | Blt of int_register * int_register * address12 (** Branch <. if (rs1 < rs2) PC += imm. *)
-  | Bge of int_register * int_register * address12 (** Branch >=. if (rs1 >= rs2) PC += imm. *)
+  | Bne of int_register * int_register * address12
+  (** Branch !=. if (rs1 != rs2) PC += imm. *)
+  | Blt of int_register * int_register * address12
+  (** Branch <. if (rs1 < rs2) PC += imm. *)
+  | Bge of int_register * int_register * address12
+  (** Branch >=. if (rs1 >= rs2) PC += imm. *)
   | Bltu of int_register * int_register * address12
   (** Branch < (Unsigned). if (rs1 < rs2) PC += imm. *)
   | Bgeu of int_register * int_register * address12
@@ -150,16 +165,20 @@ type instruction =
   | Auipc of int_register * immediate20
   (** Add Upper Immediate to PC. rd = PC + (imm << 12) *)
   | Ecall (** EnvironmentCall - a syscall *)
-  | Mul of int_register * int_register * int_register (** Multiply. rd = (rs1 * rs2)[31:0] *)
-  | Mulh of int_register * int_register * int_register (** Multiply High. rd = (rs1 * rs2)[63:32] *)
+  | Mul of int_register * int_register * int_register
+  (** Multiply. rd = (rs1 * rs2)[31:0] *)
+  | Mulh of int_register * int_register * int_register
+  (** Multiply High. rd = (rs1 * rs2)[63:32] *)
   | Mulhsu of int_register * int_register * int_register
   (** Multiply High (Signed * Unsigned). rd = (rs1 * rs2)[63:32] *)
   | Mulhu of int_register * int_register * int_register
   (** Multiply High (Unsigned * Unsigned). rd = (rs1 * rs2)[63:32] *)
   | Div of int_register * int_register * int_register (** Division. rd = rs1 / rs2 *)
-  | Divu of int_register * int_register * int_register (** Division (Unsigned). rd = rs1 / rs2 *)
+  | Divu of int_register * int_register * int_register
+  (** Division (Unsigned). rd = rs1 / rs2 *)
   | Rem of int_register * int_register * int_register (** Remainder. rd = rs1 % rs2 *)
-  | Remu of int_register * int_register * int_register (** Remainder (Unsigned). rd = rs1 % rs2 *)
+  | Remu of int_register * int_register * int_register
+  (** Remainder (Unsigned). rd = rs1 % rs2 *)
   | Lwu of int_register * int_register * immediate12
   (** Load Word (Unsigned). rd = M[rs1 + imm][0:31] *)
   | Ld of int_register * int_register * immediate12
@@ -174,25 +193,78 @@ type instruction =
   (** Shift Right Logical with Immediate Word. rd = (rs1 >> shamt)[31:0] *)
   | Sraiw of int_register * int_register * immediate12
   (** Shift Right Arithmetic with Immediate Word. rd = (rs1 >> shamt)[31:0] *)
-  | Addw of int_register * int_register * int_register (** Add Word. rd = (rs1 + rs2)[31:0] *)
-  | Subw of int_register * int_register * int_register (** Add Word. rd = (rs1 - rs2)[31:0] *)
+  | Addw of int_register * int_register * int_register
+  (** Add Word. rd = (rs1 + rs2)[31:0] *)
+  | Subw of int_register * int_register * int_register
+  (** Add Word. rd = (rs1 - rs2)[31:0] *)
   | Sllw of int_register * int_register * int_register
   (** Shifl Left Logical Word. rd = (rs1 << rs2)[31:0] *)
   | Srlw of int_register * int_register * int_register
   (** Shifl Right Logical Word. rd = (rs1 >> rs2)[31:0] *)
   | Sraw of int_register * int_register * int_register
   (** Shifl Right Arithmetical Word. rd = (rs1 >> rs2)[31:0] *)
-  | Mulw of int_register * int_register * int_register (** Multiply Word. rd = (rs1 * rs2)[31:0] *)
-  | Divw of int_register * int_register * int_register (** Division Word. rd = (rs1 / rs2)[31:0] *)
+  | Mulw of int_register * int_register * int_register
+  (** Multiply Word. rd = (rs1 * rs2)[31:0] *)
+  | Divw of int_register * int_register * int_register
+  (** Division Word. rd = (rs1 / rs2)[31:0] *)
   | Divuw of int_register * int_register * int_register
   (** Division Word (Unsigned). rd = (rs1 / rs2)[31:0] *)
-  | Remw of int_register * int_register * int_register (** Remainder Word. rd = (rs1 % rs2)[31:0] *)
+  | Remw of int_register * int_register * int_register
+  (** Remainder Word. rd = (rs1 % rs2)[31:0] *)
   | Remwu of int_register * int_register * int_register
   (** Remainder Word (Unsigned). rd = (rs1 % rs2)[31:0] *)
   | Mv of int_register * int_register (** Copy from rs1 to rd. addi rd, rs1, 0 *)
   | Li of int_register * immediate32
   (** Load Immediate. lui rd, immediate20; addi rd, rd, immediate12 *)
   | Ret (** Return. Jalr x0, x1, 0 *)
+  | FmaddS of float_register * float_register * float_register * float_register
+  (** Fused Mul-Add Single precision. rd = rs1 * rs2 + rs3 *)
+  | FmsubS of float_register * float_register * float_register * float_register
+  (** Fused Mul-Sub Single precision. rd = rs1 * rs2 - rs3 *)
+  | FnmsubS of float_register * float_register * float_register * float_register
+  (** Fused Negative Mul-Sub Single precision. rd = -rs1 * rs2 + rs3 *)
+  | FnmaddS of float_register * float_register * float_register * float_register
+  (** Fused Negative Mul-Sub Single precision. rd = -rs1 * rs2 - rs3 *)
+  | FaddS of float_register * float_register * float_register
+  (** Addition Single precision. rd = rs1 + rs2 *)
+  | FsubS of float_register * float_register * float_register
+  (** Subtraction Single precision. rd = rs1 - rs2 *)
+  | FmulS of float_register * float_register * float_register
+  (** Multiplication Single precision. rd = rs1 * rs2 *)
+  | FdivS of float_register * float_register * float_register
+  (** Division Single precision. rd = rs1 / rs2 *)
+  | FsqrtS of float_register * float_register
+  (** Square root Single precision. rd = sqrt(rs1) *)
+  | FsgnjS of float_register * float_register * float_register
+  (** Sign Injection Single precision. rd = [rs2[31], rs1[30:0]]. Sign bit from rs2, other bits from rs1 *)
+  | FsgnjnS of float_register * float_register * float_register
+  (** Sign Injection Negative Single precision. rd = [~rs2[31], rs1[30:0]] *)
+  | FsgnjxS of float_register * float_register * float_register
+  (** Sign Injection Xor Single precision. rd = [rs1[31] ^ rs2[31], rs1[30:0]] *)
+  | FminS of float_register * float_register * float_register
+  (** Min Single precision. rd = min(rs1, rs2) *)
+  | FmaxS of float_register * float_register * float_register
+  (** Max Single precision. rd = max(rs1, rs2) *)
+  | FcvtWS of int_register * float_register
+  (** Convert single precision float to signed 32-bit integer *)
+  | FcvtWUS of int_register * float_register
+  (** Convert single precision float to unsigned 32-bit integer *)
+  | FmvXW of int_register * float_register
+  (** Move single precision float to lower 32 bits of integer register *)
+  | FeqS of int_register * float_register * float_register
+  (** Equality Single precision. Result stored in integer register. rd = (rs1 == rs2) *)
+  | FltS of int_register * float_register * float_register
+  (** Less Single precision. rd = (rs1 < rs2) *)
+  | FleS of int_register * float_register * float_register
+  (** Less or Equal Single precision. rd = (rs1 <= rs2) *)
+  | FclassS of int_register * float_register
+  (** Classification of Single precision float *)
+  | FcvtSW of float_register * int_register
+  (** Converts 32-bit signed integer to Single precision float *)
+  | FcvtSWU of float_register * int_register
+  (** Converts 32-bit unsigned integer to Single precision float *)
+  | FmvWX of float_register * int_register
+  (** Move single precision float from lower 32 bits of integer register to float register *)
 [@@deriving eq, show { with_path = false }]
 
 (** Expression in AST *)
